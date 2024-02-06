@@ -7,5 +7,5 @@ interface IAuthService {
 
     fun singUpUser(user: User, confirmPassword: String): AuthenticationResponse
 
-    fun singIn(): AuthenticationResponse
+    fun singIn(username: String, password: String): AuthenticationResponse
 }

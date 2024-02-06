@@ -7,6 +7,10 @@ import jakarta.validation.ConstraintViolation
 import jakarta.validation.ConstraintViolationException
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.AccessDeniedException
+import org.springframework.security.authentication.InternalAuthenticationServiceException
+import org.springframework.validation.BindingResult
+import org.springframework.validation.FieldError
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
@@ -20,10 +24,22 @@ class ExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException::class)
-    fun constraintViolationException(exception: ConstraintViolationException) : ResponseEntity<GeneralResponse<Any>> {
+    fun constraintViolationException(exception: ConstraintViolationException): ResponseEntity<GeneralResponse<Any>> {
         val violationArrayList: ArrayList<ConstraintViolation<*>> = ArrayList(exception.constraintViolations)
         val message = violationArrayList[0].messageTemplate
-        val res = GeneralResponse.unsuccessfulResponse<Any>(ErrorCode.METHOD_ARGUMENT_NOT_VALID,message)
+        val res = GeneralResponse.unsuccessfulResponse<Any>(ErrorCode.METHOD_ARGUMENT_NOT_VALID, message)
+        return ResponseEntity(res, ErrorCode.METHOD_ARGUMENT_NOT_VALID.httpStatus!!)
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun methodArgumentNotValidException(exception: MethodArgumentNotValidException): ResponseEntity<GeneralResponse<Any>> {
+        val bindingResult: BindingResult = exception.bindingResult
+        val message = bindingResult.fieldErrors
+            .stream()
+            .findFirst()
+            .map { obj: FieldError -> obj.defaultMessage }
+            .orElse(ErrorCode.METHOD_ARGUMENT_NOT_VALID.message)
+        val res = GeneralResponse.unsuccessfulResponse<Any>(ErrorCode.METHOD_ARGUMENT_NOT_VALID, message!!)
         return ResponseEntity(res, ErrorCode.METHOD_ARGUMENT_NOT_VALID.httpStatus!!)
     }
 
@@ -37,6 +53,13 @@ class ExceptionHandler {
     fun accessDeniedException(tokenExpiredException: TokenExpiredException): ResponseEntity<GeneralResponse<Any>> {
         val res = GeneralResponse.unsuccessfulResponse<Any>(ErrorCode.TOKEN_EXPIRED)
         return ResponseEntity(res, ErrorCode.TOKEN_EXPIRED.httpStatus!!)
+    }
+
+    @ExceptionHandler(InternalAuthenticationServiceException::class)
+    fun internalAuthenticationServiceException(exception: InternalAuthenticationServiceException)
+            : ResponseEntity<GeneralResponse<Any>> {
+        val res = GeneralResponse.unsuccessfulResponse<Any>(ErrorCode.USER_NOT_FOUND, exception.message!!)
+        return ResponseEntity(res, ErrorCode.USER_NOT_FOUND.httpStatus!!)
     }
 
     @ExceptionHandler(Exception::class)

@@ -13,6 +13,7 @@ enum class ErrorCode(var code: Int?, var message: String?, var httpStatus: HttpS
     USER_NOT_FOUND(1050, "user not found", HttpStatus.BAD_REQUEST),
     PASSWORD_CONFIRMATION_MISMATCH(1051, "password and verification password do not match", HttpStatus.BAD_REQUEST),
     DUPLICATE_USERNAME(1052, "the username entered is duplicate", HttpStatus.BAD_REQUEST),
+    AUTH_INCORRECT_PASSWORD(1053,"password is incorrect",HttpStatus.BAD_REQUEST),
     METHOD_ARGUMENT_NOT_VALID(1100, "request method argument not valid", HttpStatus.BAD_REQUEST),
 
 

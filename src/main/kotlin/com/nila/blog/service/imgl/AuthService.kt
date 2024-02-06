@@ -11,6 +11,9 @@ import com.nila.blog.service.IAuthService
 import com.nila.blog.service.IUserService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.BadCredentialsException
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -25,6 +28,9 @@ class AuthService : IAuthService {
 
     @Autowired
     lateinit var jwtService: JwtService
+
+    @Autowired
+    lateinit var authenticationManager: AuthenticationManager
 
     private val log = LoggerFactory.getLogger(JWTVerificationService::class.java)
 
@@ -42,12 +48,23 @@ class AuthService : IAuthService {
         val encodedPassword = passwordEncoder.encode(user.password)
         user.password = encodedPassword
         userService.save(user)
-
+        log.info("generate token for user with username {}", user.username)
         return getJWTResponse(user)
     }
 
-    override fun singIn(): AuthenticationResponse {
-        TODO("Not yet implemented")
+    override fun singIn(username: String, password: String): AuthenticationResponse {
+        try {
+            authenticationManager.authenticate(
+                UsernamePasswordAuthenticationToken(username, password)
+            )
+        } catch (badCredentialsException: BadCredentialsException) {
+            log.error(ErrorCode.AUTH_INCORRECT_PASSWORD.message + " for username {}", username)
+            throw BlogException(ErrorCode.AUTH_INCORRECT_PASSWORD)
+        }
+
+        val user = userService.findByUsername(username)
+        log.info("generate token for user with username {}", user.username)
+        return getJWTResponse(user)
     }
 
     private fun getJWTResponse(user: User): AuthenticationResponse {

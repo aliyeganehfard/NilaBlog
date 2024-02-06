@@ -1,5 +1,7 @@
 package com.nila.blog.service.imgl
 
+import com.nila.blog.common.aop.ErrorCode
+import com.nila.blog.common.aop.exeptions.BlogException
 import com.nila.blog.common.config.JWTVerificationService
 import com.nila.blog.database.model.User
 import com.nila.blog.database.repository.UserRepository
@@ -25,5 +27,13 @@ class UserService: IUserService {
 
     override fun existByUsername(username: String): Boolean {
         return userRepository.existsByUsername(username)
+    }
+
+    override fun findByUsername(username: String): User {
+        return userRepository.findByUsername(username)
+            .orElseThrow {
+                log.error(ErrorCode.USER_NOT_FOUND.message)
+                BlogException(ErrorCode.USER_NOT_FOUND)
+            }
     }
 }

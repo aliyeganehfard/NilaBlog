@@ -6,5 +6,7 @@ interface IUserService {
 
     fun save(user: User)
 
-    fun existByUsername(username: String):Boolean
+    fun existByUsername(username: String): Boolean
+
+    fun findByUsername(username: String): User
 }
