@@ -5,8 +5,8 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.interfaces.DecodedJWT
 import com.nila.blog.common.aop.ErrorCode
 import com.nila.blog.common.aop.exeptions.BlogException
-import com.nila.blog.common.dto.authentication.AuthenticationResponse
-import com.nila.blog.common.utils.PrivateKeyReader
+import com.nila.blog.common.dto.authentication.res.AuthenticationResponse
+import com.nila.blog.common.utils.RSAUtils
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.Environment
@@ -42,7 +42,7 @@ class JwtService {
                 "auth.service.expiration.refresh.token.time",
                 Long::class.java, 30L
             ) * 60L * 1000L
-            privateKey = PrivateKeyReader.getPrivateKey("sign_key")
+            privateKey = RSAUtils.getPrivateKey("private_key")
             publicKey = jwtVerificationService.getRSAPublicKey()
         } catch (e: Exception) {
             log.error(ErrorCode.RSA_TROUBLE_READ_PRIVATE_KEY.message)
@@ -53,9 +53,7 @@ class JwtService {
     fun getToken(payload: Map<String, List<String?>>, userDetails: UserDetails): AuthenticationResponse {
         val jwt = AuthenticationResponse()
         val accessToken = generateAccessToken(payload, userDetails)
-        val refreshToken = generateRefreshToken(userDetails)
         jwt.accessToken = accessToken
-        jwt.refreshToken = refreshToken
         jwt.tokenType = TOKEN_TYPE
         log.info("generating token for user {} ", userDetails.username)
         return jwt
@@ -76,13 +74,6 @@ class JwtService {
             )
         }
         return builder.sign(signingAlgorithm)
-    }
-
-    private fun generateRefreshToken(userDetails: UserDetails): String {
-        return JWT.create()
-            .withSubject(userDetails.username)
-            .withExpiresAt(Date(System.currentTimeMillis() + expirationRefreshTokenTime!!))
-            .sign(signingAlgorithm)
     }
 
     private val signingAlgorithm: Algorithm

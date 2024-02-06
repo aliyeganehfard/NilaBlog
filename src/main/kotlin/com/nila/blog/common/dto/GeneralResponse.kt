@@ -1,17 +1,18 @@
 package com.nila.blog.common.dto
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.nila.blog.common.aop.ErrorCode
 import java.io.Serializable
 
-class GeneralResponse<T> : Serializable {
-    private var rsCode: Int? = null
-    private var message: String? = null
-    private var isSuccess: Boolean? = null
-    private var resultData: T? = null
+@JsonInclude(JsonInclude.Include.NON_NULL)
+class GeneralResponse<T : Any> : Serializable {
+    var rsCode: Int? = null
+    var message: String? = null
+    var isSuccess: Boolean? = null
+    var resultData: T? = null
 
     companion object {
-
-        fun <T> successfulResponse(resultData: T?, errorCode: ErrorCode): GeneralResponse<T> {
+        fun <T : Any> successfulResponse(resultData: T?, errorCode: ErrorCode): GeneralResponse<T> {
             return GeneralResponse<T>().apply {
                 this.rsCode = errorCode.code
                 this.message = errorCode.message
@@ -20,7 +21,7 @@ class GeneralResponse<T> : Serializable {
             }
         }
 
-        fun <T> successfulResponse(errorCode: ErrorCode): GeneralResponse<T> {
+        fun <T : Any> successfulResponse(errorCode: ErrorCode): GeneralResponse<T> {
             return GeneralResponse<T>().apply {
                 this.rsCode = errorCode.code
                 this.message = errorCode.message
@@ -28,7 +29,7 @@ class GeneralResponse<T> : Serializable {
             }
         }
 
-        fun <T> successfulResponse(resultData: T?): GeneralResponse<T> {
+        fun <T : Any> successfulResponse(resultData: T?): GeneralResponse<T> {
             return GeneralResponse<T>().apply {
                 this.rsCode = ErrorCode.SUCCESSFUL.code
                 this.message = ErrorCode.SUCCESSFUL.message
@@ -37,7 +38,7 @@ class GeneralResponse<T> : Serializable {
             }
         }
 
-        fun <T> successfulResponse(): GeneralResponse<T> {
+        fun <T : Any> successfulResponse(): GeneralResponse<T> {
             return GeneralResponse<T>().apply {
                 this.rsCode = ErrorCode.SUCCESSFUL.code
                 this.message = ErrorCode.SUCCESSFUL.message
@@ -45,7 +46,7 @@ class GeneralResponse<T> : Serializable {
             }
         }
 
-        fun <T>  unsuccessfulResponse(errorCode: ErrorCode): GeneralResponse<T>  {
+        fun <T : Any> unsuccessfulResponse(errorCode: ErrorCode): GeneralResponse<T> {
             return GeneralResponse<T>().apply {
                 this.rsCode = errorCode.code
                 this.message = errorCode.message
@@ -53,7 +54,15 @@ class GeneralResponse<T> : Serializable {
             }
         }
 
-        fun <T>  unsuccessfulResponse():  GeneralResponse<T> {
+        fun <T : Any> unsuccessfulResponse(errorCode: ErrorCode, message: String): GeneralResponse<T> {
+            return GeneralResponse<T>().apply {
+                this.rsCode = errorCode.code
+                this.message = message
+                this.isSuccess = false
+            }
+        }
+
+        fun <T : Any> unsuccessfulResponse(): GeneralResponse<T> {
             return GeneralResponse<T>().apply {
                 this.rsCode = ErrorCode.INTERNAL_SERVER_ERROR.code
                 this.message = ErrorCode.INTERNAL_SERVER_ERROR.message

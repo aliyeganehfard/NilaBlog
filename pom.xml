@@ -51,6 +51,12 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Spring validation -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
 		<!-- JWT -->
 		<dependency>
 			<groupId>com.auth0</groupId>
@@ -74,11 +80,17 @@
 			<artifactId>kotlin-stdlib-jdk8</artifactId>
 		</dependency>
 
-
 		<!-- Postgres -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
+		</dependency>
+
+		<!-- Model Mapper -->
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>3.1.1</version>
 		</dependency>
 	</dependencies>
 

@@ -7,9 +7,10 @@ import com.auth0.jwt.interfaces.Claim
 import com.auth0.jwt.interfaces.DecodedJWT
 import com.nila.blog.common.aop.ErrorCode
 import com.nila.blog.common.aop.exeptions.BlogException
-import com.nila.blog.common.utils.PublicKeyReader
+import com.nila.blog.common.utils.RSAUtils
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.io.ResourceLoader
 import org.springframework.stereotype.Service
 import java.security.interfaces.RSAPublicKey
 import java.util.*
@@ -18,6 +19,9 @@ import java.util.*
 @Service
 class JWTVerificationService {
 
+    @Autowired
+    lateinit var resourceLoader: ResourceLoader
+
     private final var publicKey: RSAPublicKey? = null
 
     private val log = LoggerFactory.getLogger(JWTVerificationService::class.java)
@@ -25,11 +29,11 @@ class JWTVerificationService {
     @Autowired
     fun init() {
         try {
-            publicKey = PublicKeyReader.getPublicKey("verify_key.pub")
+            publicKey = RSAUtils.getPublicKey("public_key.pub")
             log.info("reading public key was successful!")
         } catch (e: Exception) {
             log.error(ErrorCode.RSA_TROUBLE_READ_PUBLIC_KEY.message)
-            throw BlogException(ErrorCode.RSA_TROUBLE_READ_PUBLIC_KEY)
+            throw BlogException(ErrorCode.RSA_TROUBLE_READ_PUBLIC_KEY,e)
         }
     }
 

@@ -3,6 +3,8 @@ package com.nila.blog.common.aop
 import com.auth0.jwt.exceptions.TokenExpiredException
 import com.nila.blog.common.aop.exeptions.BlogException
 import com.nila.blog.common.dto.GeneralResponse
+import jakarta.validation.ConstraintViolation
+import jakarta.validation.ConstraintViolationException
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -15,6 +17,14 @@ class ExceptionHandler {
     fun blogException(blog: BlogException): ResponseEntity<GeneralResponse<Any>> {
         val res = GeneralResponse.unsuccessfulResponse<Any>(blog.errorCode!!)
         return ResponseEntity(res, blog.errorCode!!.httpStatus!!)
+    }
+
+    @ExceptionHandler(ConstraintViolationException::class)
+    fun constraintViolationException(exception: ConstraintViolationException) : ResponseEntity<GeneralResponse<Any>> {
+        val violationArrayList: ArrayList<ConstraintViolation<*>> = ArrayList(exception.constraintViolations)
+        val message = violationArrayList[0].messageTemplate
+        val res = GeneralResponse.unsuccessfulResponse<Any>(ErrorCode.METHOD_ARGUMENT_NOT_VALID,message)
+        return ResponseEntity(res, ErrorCode.METHOD_ARGUMENT_NOT_VALID.httpStatus!!)
     }
 
     @ExceptionHandler(AccessDeniedException::class)
@@ -30,7 +40,7 @@ class ExceptionHandler {
     }
 
     @ExceptionHandler(Exception::class)
-    fun accessDeniedException(exception: java.lang.Exception): ResponseEntity<GeneralResponse<Any>> {
+    fun accessDeniedException(exception: Exception): ResponseEntity<GeneralResponse<Any>> {
         val res = GeneralResponse.unsuccessfulResponse<Any>(ErrorCode.INTERNAL_SERVER_ERROR)
         return ResponseEntity(res, ErrorCode.INTERNAL_SERVER_ERROR.httpStatus!!)
     }
