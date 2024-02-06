@@ -10,7 +10,6 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-<!--	<artifactId>blog-service</artifactId>-->
 	<groupId>com.nila.blog</groupId>
 	<artifactId>NilaBlog</artifactId>
 	<version>1.0.0</version>
@@ -23,6 +22,7 @@
 	</properties>
 
 	<dependencies>
+
 		<!-- Spring requirements dependency -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -38,6 +38,24 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- JWT -->
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>4.4.0</version>
 		</dependency>
 
 		<!-- kotlin requirements -->
