@@ -8,12 +8,12 @@ class SingUpReq{
     @NotEmpty(message = "enter the username")
     var username: String? = null
 
-    @Email(message = "please provide a valid email address")
     @NotEmpty(message = "enter the email")
+    @Email(message = "please provide a valid email address")
     var email: String? = null
 
-    @Pattern(regexp = "^.{8,}$", message = "password need more that 8 character")
     @NotEmpty(message = "enter the password")
+    @Pattern(regexp = "^.{8,}$", message = "password need more that 8 character")
     var password: String? = null
 
     @NotEmpty(message = "enter the confirmation password")

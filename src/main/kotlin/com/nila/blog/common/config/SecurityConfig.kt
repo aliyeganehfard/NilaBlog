@@ -35,7 +35,7 @@ class SecurityConfig {
             .authorizeHttpRequests { auth ->
                 auth
                     .requestMatchers("v1/auth/**").permitAll()
-                    .requestMatchers("v1/user/profile/**").permitAll()
+                    .requestMatchers("v1/user/profile/find/**").permitAll()
                     .requestMatchers("v1/user/**").hasRole("USER")
                     .anyRequest().authenticated()
             }
