@@ -26,7 +26,7 @@ class JwtService {
     @Autowired
     lateinit var env: Environment
 
-    private val log = LoggerFactory.getLogger(JWTVerificationService::class.java)
+    private val log = LoggerFactory.getLogger(JwtService::class.java)
 
     private final var expirationTokenTime: Long? = null
     private final var expirationRefreshTokenTime: Long? = null

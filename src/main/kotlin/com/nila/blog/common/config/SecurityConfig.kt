@@ -36,7 +36,7 @@ class SecurityConfig {
                 auth
                     .requestMatchers("v1/auth/**").permitAll()
                     .requestMatchers("v1/user/profile/find/**").permitAll()
-                    .requestMatchers("v1/user/**", "v1/post/**").hasRole("USER")
+                    .requestMatchers("v1/user/**", "v1/post/**",  "v1/comment/**").hasRole("USER")
                     .anyRequest().authenticated()
             }
             .sessionManagement { sess: SessionManagementConfigurer<HttpSecurity?> ->

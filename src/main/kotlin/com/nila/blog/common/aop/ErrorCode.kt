@@ -19,6 +19,8 @@ enum class ErrorCode(var code: Int?, var message: String?, var httpStatus: HttpS
 
     POST_NOT_FOUND(1065, "post not found", HttpStatus.BAD_REQUEST),
 
+    COMMENT_NOT_FOUND(1080, "comment not found", HttpStatus.BAD_REQUEST),
+
 
     METHOD_ARGUMENT_NOT_VALID(1100, "request method argument not valid", HttpStatus.BAD_REQUEST),
     MISSING_REQUEST_PARAMETER(1101,"some required parameter is missing", HttpStatus.BAD_REQUEST),

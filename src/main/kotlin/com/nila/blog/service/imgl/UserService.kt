@@ -20,7 +20,7 @@ class UserService : IUserService {
     @Autowired
     lateinit var userRepository: UserRepository
 
-    private val log = LoggerFactory.getLogger(JWTVerificationService::class.java)
+    private val log = LoggerFactory.getLogger(UserService::class.java)
 
     @Transactional
     override fun save(user: User) {

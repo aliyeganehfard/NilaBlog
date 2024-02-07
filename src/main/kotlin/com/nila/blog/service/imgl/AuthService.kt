@@ -32,7 +32,7 @@ class AuthService : IAuthService {
     @Autowired
     lateinit var authenticationManager: AuthenticationManager
 
-    private val log = LoggerFactory.getLogger(JWTVerificationService::class.java)
+    private val log = LoggerFactory.getLogger(AuthService::class.java)
 
     override fun singUpUser(user: User, confirmPassword: String): AuthenticationResponse {
         if (user.password != confirmPassword) {

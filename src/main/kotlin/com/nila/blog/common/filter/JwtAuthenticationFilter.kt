@@ -46,8 +46,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
             }
             val authHeader = request.getHeader("Authorization")
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                filterChain.doFilter(request, response)
-                return
+                throw BlogException(ErrorCode.MISSING_REQUEST_AUTHORIZATION)
             }
             val token = authHeader.substring("Bearer ".length)
             val decodedJWT: DecodedJWT = jwtVerificationService.getDecodedJWT(token)
@@ -64,7 +63,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
             filterChain.doFilter(request, response)
         } catch (blogException: BlogException) {
             val resMessage = GeneralResponse.unsuccessfulResponse<Any>(blogException.errorCode!!)
-            setResponse(response, resMessage)
+            setResponse(response, resMessage, blogException.errorCode!!.httpStatus!!)
         } catch (e: Exception) {
             val resMessage = GeneralResponse.unsuccessfulResponse<Any>(ErrorCode.INTERNAL_SERVER_ERROR)
             setResponse(response, resMessage)
@@ -74,8 +73,13 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
 
     @Throws(IOException::class)
     private fun setResponse(response: HttpServletResponse, resMessage: GeneralResponse<Any>) {
+      setResponse(response, resMessage, HttpStatus.BAD_REQUEST)
+    }
+
+    @Throws(IOException::class)
+    private fun setResponse(response: HttpServletResponse, resMessage: GeneralResponse<Any>, status : HttpStatus) {
         val mapper = ObjectMapper()
-        response.status = HttpStatus.BAD_REQUEST.value()
+        response.status = status.value()
         response.characterEncoding = "utf-8"
         response.contentType = "application/json"
         response.writer.write(mapper.writeValueAsString(resMessage))

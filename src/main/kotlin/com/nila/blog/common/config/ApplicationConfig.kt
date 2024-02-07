@@ -21,7 +21,7 @@ class ApplicationConfig {
     @Autowired
     lateinit var userRepository: UserRepository
 
-    private val log = LoggerFactory.getLogger(JWTVerificationService::class.java)
+    private val log = LoggerFactory.getLogger(ApplicationConfig::class.java)
 
     @Bean
     fun userDetailsService(): UserDetailsService {

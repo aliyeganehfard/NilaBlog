@@ -22,7 +22,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @ControllerAdvice
 class ExceptionHandler {
 
-    private val log = LoggerFactory.getLogger(JWTVerificationService::class.java)
+    private val log = LoggerFactory.getLogger(ExceptionHandler::class.java)
 
     @ExceptionHandler(BlogException::class)
     fun blogException(blog: BlogException): ResponseEntity<GeneralResponse<Any>> {

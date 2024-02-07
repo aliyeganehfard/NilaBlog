@@ -24,7 +24,7 @@ class BlogPostService : IBlogPostService {
     @Autowired
     lateinit var userService: IUserService
 
-    private val log = LoggerFactory.getLogger(JWTVerificationService::class.java)
+    private val log = LoggerFactory.getLogger(BlogPostService::class.java)
 
     @Transactional
     override fun add(userId: String, post: BlogPost) {
