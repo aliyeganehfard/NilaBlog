@@ -58,7 +58,7 @@ class CommentService : ICommentService {
     override fun findById(postId: Long): Comment {
         return commentRepository.findById(postId)
             .orElseThrow {
-                log.error(ErrorCode.COMMENT_NOT_FOUND.message)
+                log.warn(ErrorCode.COMMENT_NOT_FOUND.message)
                 BlogException(ErrorCode.COMMENT_NOT_FOUND)
             }
     }

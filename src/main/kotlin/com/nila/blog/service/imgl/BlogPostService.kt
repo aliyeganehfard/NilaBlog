@@ -62,7 +62,7 @@ class BlogPostService : IBlogPostService {
     override fun findById(postId: Long): BlogPost {
         return postRepository.findById(postId)
             .orElseThrow {
-                log.error(ErrorCode.POST_NOT_FOUND.message)
+                log.warn(ErrorCode.POST_NOT_FOUND.message)
                 BlogException(ErrorCode.POST_NOT_FOUND)
             }
     }

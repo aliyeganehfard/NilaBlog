@@ -26,7 +26,6 @@ data class User(
     @Column(name = "password", nullable = false)
     private var password: String = "",
 
-//    @Lob
     @Column(name = "profile_pictures")
     var profilePictures: ByteArray? = null,
 
