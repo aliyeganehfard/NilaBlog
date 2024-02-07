@@ -18,6 +18,7 @@ enum class ErrorCode(var code: Int?, var message: String?, var httpStatus: HttpS
     AUTH_INCORRECT_PASSWORD(1053,"password is incorrect",HttpStatus.BAD_REQUEST),
 
     POST_NOT_FOUND(1065, "post not found", HttpStatus.BAD_REQUEST),
+    INVALID_POST_CATEGORY(1066, "entered post category is invalid", HttpStatus.BAD_REQUEST),
 
     COMMENT_NOT_FOUND(1080, "comment not found", HttpStatus.BAD_REQUEST),
 
@@ -26,6 +27,7 @@ enum class ErrorCode(var code: Int?, var message: String?, var httpStatus: HttpS
     MISSING_REQUEST_PARAMETER(1101,"some required parameter is missing", HttpStatus.BAD_REQUEST),
     MISSING_REQUEST_AUTHORIZATION(1102,"request authorization header is missing", HttpStatus.FORBIDDEN),
     METHOD_ARGUMENT_TYPE_MISMATCH(1103,"Make sure the inputs value is correct", HttpStatus.BAD_REQUEST),
+    BAD_INPUT(1104,"input is incorrect", HttpStatus.BAD_REQUEST),
 
 
     USER_NOT_FOUND2(1050, "user not found", HttpStatus.BAD_REQUEST),

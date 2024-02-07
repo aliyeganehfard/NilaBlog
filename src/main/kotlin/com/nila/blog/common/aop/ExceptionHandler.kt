@@ -1,13 +1,14 @@
 package com.nila.blog.common.aop
 
 import com.auth0.jwt.exceptions.TokenExpiredException
+import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.nila.blog.common.aop.exeptions.BlogException
-import com.nila.blog.common.config.JWTVerificationService
 import com.nila.blog.common.dto.GeneralResponse
 import jakarta.validation.ConstraintViolation
 import jakarta.validation.ConstraintViolationException
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.authentication.InternalAuthenticationServiceException
 import org.springframework.validation.BindingResult
@@ -91,9 +92,17 @@ class ExceptionHandler {
         return ResponseEntity(res, ErrorCode.METHOD_ARGUMENT_TYPE_MISMATCH.httpStatus!!)
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun httpMessageNotReadableException(exception: HttpMessageNotReadableException)
+            : ResponseEntity<GeneralResponse<Any>> {
+        val cause = "input " + (exception.cause as InvalidFormatException).value + " is invalid"
+        val res = GeneralResponse.unsuccessfulResponse<Any>(ErrorCode.BAD_INPUT, cause)
+        return ResponseEntity(res, ErrorCode.BAD_INPUT.httpStatus!!)
+    }
+
     @ExceptionHandler(Exception::class)
     fun exception(exception: Exception): ResponseEntity<GeneralResponse<Any>> {
-        log.error("exception",exception)
+        log.error("exception", exception)
         val res = GeneralResponse.unsuccessfulResponse<Any>(ErrorCode.INTERNAL_SERVER_ERROR)
         return ResponseEntity(res, ErrorCode.INTERNAL_SERVER_ERROR.httpStatus!!)
     }
