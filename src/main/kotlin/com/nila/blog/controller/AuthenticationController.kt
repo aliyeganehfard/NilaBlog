@@ -10,6 +10,7 @@ import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -25,8 +26,7 @@ class AuthenticationController {
 
     val mapper = Mapper()
 
-    @PostMapping("singUp")
-//    @PreAuthorize("permitAll()")
+    @PostMapping("signUp")
     fun singUpUser(@RequestBody @Valid req: SingUpReq): ResponseEntity<GeneralResponse<AuthenticationResponse>> {
         val user = mapper.toModel(req, User::class.java)
         val token = authService.singUpUser(user, req.confirmPassword!!)
@@ -34,7 +34,7 @@ class AuthenticationController {
         return ResponseEntity(res, HttpStatus.OK)
     }
 
-    @PostMapping("singIn")
+    @PostMapping("signIn")
     fun singInUser(@RequestBody formData: MultiValueMap<String, String>)
             : ResponseEntity<GeneralResponse<AuthenticationResponse>> {
         val username = formData.getFirst("username")

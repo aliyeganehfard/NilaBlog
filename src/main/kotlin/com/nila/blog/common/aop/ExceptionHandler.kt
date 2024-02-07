@@ -63,7 +63,7 @@ class ExceptionHandler {
     }
 
     @ExceptionHandler(Exception::class)
-    fun accessDeniedException(exception: Exception): ResponseEntity<GeneralResponse<Any>> {
+    fun exception(exception: Exception): ResponseEntity<GeneralResponse<Any>> {
         val res = GeneralResponse.unsuccessfulResponse<Any>(ErrorCode.INTERNAL_SERVER_ERROR)
         return ResponseEntity(res, ErrorCode.INTERNAL_SERVER_ERROR.httpStatus!!)
     }

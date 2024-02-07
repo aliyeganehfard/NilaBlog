@@ -33,7 +33,7 @@ class SecurityConfig {
         http.csrf { obj: CsrfConfigurer<HttpSecurity> -> obj.disable() }
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers("v1/**").permitAll()
+                    .requestMatchers("v1/auth/**").permitAll()
                     .anyRequest().authenticated()
             }
             .sessionManagement { sess: SessionManagementConfigurer<HttpSecurity?> ->

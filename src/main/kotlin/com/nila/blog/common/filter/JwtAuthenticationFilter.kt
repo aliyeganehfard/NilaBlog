@@ -37,7 +37,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
         filterChain: FilterChain
     ) {
         try {
-            if (request.servletPath == "v1/auth/signIn" || request.servletPath == "v1/auth/singUp") {
+            if (request.servletPath == "/v1/auth/signIn" || request.servletPath == "/v1/auth/signUp") {
                 filterChain.doFilter(request, response)
                 return
             }
