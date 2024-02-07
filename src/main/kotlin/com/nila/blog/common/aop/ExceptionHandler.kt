@@ -17,6 +17,7 @@ import org.springframework.web.bind.MissingRequestHeaderException
 import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 
 @ControllerAdvice
 class ExceptionHandler {
@@ -81,6 +82,13 @@ class ExceptionHandler {
             : ResponseEntity<GeneralResponse<Any>> {
         val res = GeneralResponse.unsuccessfulResponse<Any>(ErrorCode.MISSING_REQUEST_AUTHORIZATION)
         return ResponseEntity(res, ErrorCode.MISSING_REQUEST_AUTHORIZATION.httpStatus!!)
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException::class)
+    fun methodArgumentTypeMismatchException(exception: MethodArgumentTypeMismatchException)
+            : ResponseEntity<GeneralResponse<Any>> {
+        val res = GeneralResponse.unsuccessfulResponse<Any>(ErrorCode.METHOD_ARGUMENT_TYPE_MISMATCH)
+        return ResponseEntity(res, ErrorCode.METHOD_ARGUMENT_TYPE_MISMATCH.httpStatus!!)
     }
 
     @ExceptionHandler(Exception::class)

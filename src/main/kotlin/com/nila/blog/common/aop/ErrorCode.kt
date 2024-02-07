@@ -17,10 +17,13 @@ enum class ErrorCode(var code: Int?, var message: String?, var httpStatus: HttpS
     DUPLICATE_USERNAME(1052, "the username or email entered is duplicate", HttpStatus.BAD_REQUEST),
     AUTH_INCORRECT_PASSWORD(1053,"password is incorrect",HttpStatus.BAD_REQUEST),
 
+    POST_NOT_FOUND(1065, "post not found", HttpStatus.BAD_REQUEST),
+
 
     METHOD_ARGUMENT_NOT_VALID(1100, "request method argument not valid", HttpStatus.BAD_REQUEST),
     MISSING_REQUEST_PARAMETER(1101,"some required parameter is missing", HttpStatus.BAD_REQUEST),
-    MISSING_REQUEST_AUTHORIZATION(1101,"request authorization header is missing", HttpStatus.FORBIDDEN),
+    MISSING_REQUEST_AUTHORIZATION(1102,"request authorization header is missing", HttpStatus.FORBIDDEN),
+    METHOD_ARGUMENT_TYPE_MISMATCH(1103,"Make sure the inputs value is correct", HttpStatus.BAD_REQUEST),
 
 
     USER_NOT_FOUND2(1050, "user not found", HttpStatus.BAD_REQUEST),
