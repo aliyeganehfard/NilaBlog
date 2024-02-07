@@ -17,4 +17,10 @@ interface BlogPostRepository : JpaRepository<BlogPost, Long> {
     """
     )
     fun findUserPosts(userId: UUID, pageable: Pageable): List<BlogPost>
+
+    @Query("""
+        SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM BlogPost p
+        WHERE p.user.id = :userId AND p.id = :postId
+    """)
+    fun isUserValidToAccess(postId :Long, userId: UUID): Boolean
 }

@@ -12,6 +12,7 @@ import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
@@ -26,7 +27,7 @@ class CommentController {
     val mapper = Mapper()
 
     @PostMapping("add")
-    fun addPost(@RequestBody @Valid req: CommentAddReq)
+    fun addComment(@RequestBody @Valid req: CommentAddReq)
             : ResponseEntity<GeneralResponse<Any>> {
         val comment = mapper.toModel(req, Comment::class.java)
         commentService.add(req.userId, comment)
@@ -35,21 +36,21 @@ class CommentController {
     }
 
     @PutMapping("edit")
-    fun editPost(@RequestBody @Valid req: CommentEditReq): ResponseEntity<GeneralResponse<Any>> {
+    fun editComment(@RequestBody @Valid req: CommentEditReq): ResponseEntity<GeneralResponse<Any>> {
         commentService.edit(req)
         val res = GeneralResponse.successfulResponse<Any>()
         return ResponseEntity(res, HttpStatus.OK)
     }
 
     @DeleteMapping("delete")
-    fun deletePost(@RequestParam(name = "commentId") commentId: Long): ResponseEntity<GeneralResponse<Any>> {
+    fun deleteComment(@RequestParam(name = "commentId") commentId: Long): ResponseEntity<GeneralResponse<Any>> {
         commentService.delete(commentId)
         val res = GeneralResponse.successfulResponse<Any>()
         return ResponseEntity(res, HttpStatus.OK)
     }
 
     @GetMapping("find/{comment_id}")
-    fun findPost(@PathVariable(name = "comment_id") postId: Long): ResponseEntity<GeneralResponse<CommentRes>> {
+    fun findComment(@PathVariable(name = "comment_id") postId: Long): ResponseEntity<GeneralResponse<CommentRes>> {
         val post = commentService.findById(postId)
         val postDto = mapper.toDto(post, CommentRes::class.java)
         val res = GeneralResponse.successfulResponse(postDto)

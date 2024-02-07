@@ -16,6 +16,7 @@ import jakarta.validation.constraints.NotNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
@@ -44,16 +45,37 @@ class BlogPostController {
     }
 
     @PutMapping("edit")
-    fun editPost(@RequestBody @Valid req: PostEditReq): ResponseEntity<GeneralResponse<Any>> {
+    @PreAuthorize("@blogPostService.accessLevelCheck(#req.id, #token)")
+    fun editPost(@RequestBody @Valid req: PostEditReq, @RequestHeader("Authorization") token: String)
+            : ResponseEntity<GeneralResponse<Any>> {
         postService.edit(req)
         val res = GeneralResponse.successfulResponse<Any>()
         return ResponseEntity(res, HttpStatus.OK)
     }
 
     @DeleteMapping("delete")
-    fun deletePost(@RequestParam(name = "postId") postId: Long): ResponseEntity<GeneralResponse<Any>> {
+    @PreAuthorize("@blogPostService.accessLevelCheck(#postId, #token)")
+    fun deletePost(@RequestParam(name = "postId") postId: Long, @RequestHeader("Authorization") token: String)
+            : ResponseEntity<GeneralResponse<Any>> {
         postService.delete(postId)
         val res = GeneralResponse.successfulResponse<Any>()
+        return ResponseEntity(res, HttpStatus.OK)
+    }
+
+    @GetMapping("user")
+    fun findUserPosts(
+        @NotNull(message = "page can not be null")
+        @RequestParam(name = "page") page: Int,
+        @NotNull(message = "size can not be null")
+        @Min(value = 5, message = "size must between 5 to 50")
+        @Max(value = 50, message = "size must between 5 to 50")
+        @RequestParam(name = "size") size: Int,
+        @RequestHeader("Authorization") token: String
+    ): ResponseEntity<GeneralResponse<List<PostRes>>> {
+        val userId = jwtService.getUuid(token)
+        val posts = postService.findUserPosts(userId, page, size)
+        val postsDto = mapper.toModelList(posts, PostRes::class.java)
+        val res = GeneralResponse.successfulResponse(postsDto)
         return ResponseEntity(res, HttpStatus.OK)
     }
 
@@ -62,23 +84,6 @@ class BlogPostController {
         val post = postService.findById(postId)
         val postDto = mapper.toDto(post, PostRes::class.java)
         val res = GeneralResponse.successfulResponse(postDto)
-        return ResponseEntity(res, HttpStatus.OK)
-    }
-
-    @GetMapping("find/user")
-    fun findUserPosts(
-        @NotEmpty(message = "please enter userId")
-        @RequestParam(name = "userId") userId: String,
-        @NotNull(message = "page can not be null")
-        @RequestParam(name = "page") page: Int,
-        @NotNull(message = "size can not be null")
-        @Min(value = 5, message = "size must between 5 to 50")
-        @Max(value = 50, message = "size must between 5 to 50")
-        @RequestParam(name = "size") size: Int
-    ): ResponseEntity<GeneralResponse<List<PostRes>>> {
-        val posts = postService.findUserPosts(userId, page, size)
-        val postsDto = mapper.toModelList(posts, PostRes::class.java)
-        val res = GeneralResponse.successfulResponse(postsDto)
         return ResponseEntity(res, HttpStatus.OK)
     }
 }
