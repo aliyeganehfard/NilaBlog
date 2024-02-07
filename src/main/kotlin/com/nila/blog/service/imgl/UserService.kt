@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.multipart.MultipartFile
+import java.util.*
 
 @Service
 class UserService: IUserService {
@@ -22,15 +24,32 @@ class UserService: IUserService {
     @Transactional
     override fun save(user: User) {
         userRepository.save(user)
-        log.info("saved user with id {}", user.id)
+        log.info("saved user with username {}", user.username)
     }
 
-    override fun existByUsername(username: String): Boolean {
-        return userRepository.existsByUsername(username)
+    @Transactional
+    override fun uploadUserProfile(image: MultipartFile, userId: String) {
+        val user = findById(UUID.fromString(userId))
+        val imageBase64 = Base64.getEncoder().encodeToString(image.bytes)
+        user.profilePictures = image.bytes
+        userRepository.save(user)
+        log.info("upload profile picture for user with username {}", user.username)
+    }
+
+    override fun existByUsernameOrEmail(username: String, email: String): Boolean {
+        return userRepository.existsByUsernameOrEmail(username, email)
     }
 
     override fun findByUsername(username: String): User {
         return userRepository.findByUsername(username)
+            .orElseThrow {
+                log.error(ErrorCode.USER_NOT_FOUND.message)
+                BlogException(ErrorCode.USER_NOT_FOUND)
+            }
+    }
+
+    override fun findById(userId: UUID): User {
+        return userRepository.findById(userId)
             .orElseThrow {
                 log.error(ErrorCode.USER_NOT_FOUND.message)
                 BlogException(ErrorCode.USER_NOT_FOUND)

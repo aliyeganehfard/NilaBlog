@@ -2,20 +2,26 @@ package com.nila.blog.common.aop
 
 import com.auth0.jwt.exceptions.TokenExpiredException
 import com.nila.blog.common.aop.exeptions.BlogException
+import com.nila.blog.common.config.JWTVerificationService
 import com.nila.blog.common.dto.GeneralResponse
 import jakarta.validation.ConstraintViolation
 import jakarta.validation.ConstraintViolationException
+import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.authentication.InternalAuthenticationServiceException
 import org.springframework.validation.BindingResult
 import org.springframework.validation.FieldError
 import org.springframework.web.bind.MethodArgumentNotValidException
+import org.springframework.web.bind.MissingRequestHeaderException
+import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
 @ControllerAdvice
 class ExceptionHandler {
+
+    private val log = LoggerFactory.getLogger(JWTVerificationService::class.java)
 
     @ExceptionHandler(BlogException::class)
     fun blogException(blog: BlogException): ResponseEntity<GeneralResponse<Any>> {
@@ -58,12 +64,28 @@ class ExceptionHandler {
     @ExceptionHandler(InternalAuthenticationServiceException::class)
     fun internalAuthenticationServiceException(exception: InternalAuthenticationServiceException)
             : ResponseEntity<GeneralResponse<Any>> {
+        log.error("exception", exception)
         val res = GeneralResponse.unsuccessfulResponse<Any>(ErrorCode.USER_NOT_FOUND, exception.message!!)
         return ResponseEntity(res, ErrorCode.USER_NOT_FOUND.httpStatus!!)
     }
 
+    @ExceptionHandler(MissingServletRequestParameterException::class)
+    fun missingServletRequestParameterException(exception: MissingServletRequestParameterException)
+            : ResponseEntity<GeneralResponse<Any>> {
+        val res = GeneralResponse.unsuccessfulResponse<Any>(ErrorCode.MISSING_REQUEST_PARAMETER, exception.message)
+        return ResponseEntity(res, ErrorCode.MISSING_REQUEST_PARAMETER.httpStatus!!)
+    }
+
+    @ExceptionHandler(MissingRequestHeaderException::class)
+    fun missingServletRequestParameterException(exception: MissingRequestHeaderException)
+            : ResponseEntity<GeneralResponse<Any>> {
+        val res = GeneralResponse.unsuccessfulResponse<Any>(ErrorCode.MISSING_REQUEST_AUTHORIZATION)
+        return ResponseEntity(res, ErrorCode.MISSING_REQUEST_AUTHORIZATION.httpStatus!!)
+    }
+
     @ExceptionHandler(Exception::class)
     fun exception(exception: Exception): ResponseEntity<GeneralResponse<Any>> {
+        log.error("exception",exception)
         val res = GeneralResponse.unsuccessfulResponse<Any>(ErrorCode.INTERNAL_SERVER_ERROR)
         return ResponseEntity(res, ErrorCode.INTERNAL_SERVER_ERROR.httpStatus!!)
     }

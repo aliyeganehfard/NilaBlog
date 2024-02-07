@@ -23,12 +23,12 @@ data class User(
     @Column(name = "email", nullable = false, unique = true)
     var email: String = "",
 
-    @Column(name = "password", nullable = false, unique = true)
+    @Column(name = "password", nullable = false)
     private var password: String = "",
 
-    @Lob
+//    @Lob
     @Column(name = "profile_pictures")
-    var profilePictures: String? = null,
+    var profilePictures: ByteArray? = null,
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     var posts: List<BlogPost> = mutableListOf(),
@@ -37,8 +37,10 @@ data class User(
     var comments: List<Comment> = mutableListOf(),
 ) : UserDetails {
 
+
+
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        return mutableListOf(SimpleGrantedAuthority(Roles.USER.name))
+        return mutableListOf(SimpleGrantedAuthority(Roles.ROLE_USER.name))
     }
 
     override fun getPassword(): String {

@@ -40,7 +40,7 @@ class AuthService : IAuthService {
             throw BlogException(ErrorCode.PASSWORD_CONFIRMATION_MISMATCH)
         }
 
-        if (userService.existByUsername(user.username)) {
+        if (userService.existByUsernameOrEmail(user.username, user.email)) {
             log.warn(ErrorCode.DUPLICATE_USERNAME.message)
             throw BlogException(ErrorCode.DUPLICATE_USERNAME)
         }
@@ -68,7 +68,7 @@ class AuthService : IAuthService {
     }
 
     private fun getJWTResponse(user: User): AuthenticationResponse {
-        val roles = listOf(Roles.USER.name)
+        val roles = listOf(Roles.ROLE_USER.name)
         val uuid = listOf(user.id.toString())
         val payload = mapOf(
             JWTVerificationService.CLAIM_ROLES to roles,

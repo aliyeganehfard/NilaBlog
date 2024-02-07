@@ -10,11 +10,17 @@ enum class ErrorCode(var code: Int?, var message: String?, var httpStatus: HttpS
     TOKEN_INVALID(1004, "token is not valid", HttpStatus.FORBIDDEN),
     RSA_TROUBLE_READ_PUBLIC_KEY(1005, "trouble in read public key file", HttpStatus.INTERNAL_SERVER_ERROR),
     RSA_TROUBLE_READ_PRIVATE_KEY(1005, "trouble in read private key file", HttpStatus.INTERNAL_SERVER_ERROR),
+
+
     USER_NOT_FOUND(1050, "user not found", HttpStatus.BAD_REQUEST),
     PASSWORD_CONFIRMATION_MISMATCH(1051, "password and verification password do not match", HttpStatus.BAD_REQUEST),
-    DUPLICATE_USERNAME(1052, "the username entered is duplicate", HttpStatus.BAD_REQUEST),
+    DUPLICATE_USERNAME(1052, "the username or email entered is duplicate", HttpStatus.BAD_REQUEST),
     AUTH_INCORRECT_PASSWORD(1053,"password is incorrect",HttpStatus.BAD_REQUEST),
+
+
     METHOD_ARGUMENT_NOT_VALID(1100, "request method argument not valid", HttpStatus.BAD_REQUEST),
+    MISSING_REQUEST_PARAMETER(1101,"some required parameter is missing", HttpStatus.BAD_REQUEST),
+    MISSING_REQUEST_AUTHORIZATION(1101,"request authorization header is missing", HttpStatus.FORBIDDEN),
 
 
     USER_NOT_FOUND2(1050, "user not found", HttpStatus.BAD_REQUEST),

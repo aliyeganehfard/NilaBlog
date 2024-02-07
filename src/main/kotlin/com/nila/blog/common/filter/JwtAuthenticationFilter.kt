@@ -6,6 +6,7 @@ import com.nila.blog.common.aop.ErrorCode
 import com.nila.blog.common.aop.exeptions.BlogException
 import com.nila.blog.common.config.JWTVerificationService
 import com.nila.blog.common.config.JWTVerificationService.Companion.CLAIM_ROLES
+import com.nila.blog.common.config.UserSecurityService
 import com.nila.blog.common.dto.GeneralResponse
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
@@ -27,8 +30,8 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
     @Autowired
     lateinit var jwtVerificationService: JWTVerificationService
 
-//    @Autowired
-//    private val userSecurityService: UserSecurityService? = null
+    @Autowired
+    lateinit var userSecurityService: UserSecurityService
 
     @Throws(ServletException::class, IOException::class)
     override fun doFilterInternal(
@@ -57,7 +60,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
                 )
             }
             val authToken = UsernamePasswordAuthenticationToken(username, null, authorities)
-//            userSecurityService.setCurrentUser(authToken)
+            userSecurityService.setCurrentUser(authToken)
             filterChain.doFilter(request, response)
         } catch (blogException: BlogException) {
             val resMessage = GeneralResponse.unsuccessfulResponse<Any>(blogException.errorCode!!)

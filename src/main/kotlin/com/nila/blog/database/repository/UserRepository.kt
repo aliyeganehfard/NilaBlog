@@ -10,5 +10,5 @@ interface UserRepository : JpaRepository<User, UUID> {
 
     fun findByUsername(username: String): Optional<User>
 
-    fun existsByUsername(username: String): Boolean
+    fun existsByUsernameOrEmail(username: String, email: String): Boolean
 }

@@ -1,6 +1,7 @@
 package com.nila.blog.common.config
 
 import com.nila.blog.common.filter.JwtAuthenticationFilter
+import com.nila.blog.database.model.enums.Roles
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -30,10 +31,12 @@ class SecurityConfig {
     @Bean
     @Throws(Exception::class)
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        http.csrf { obj: CsrfConfigurer<HttpSecurity> -> obj.disable() }
+        http.csrf { it.disable() }
             .authorizeHttpRequests { auth ->
                 auth
                     .requestMatchers("v1/auth/**").permitAll()
+                    .requestMatchers("v1/user/profile/**").permitAll()
+                    .requestMatchers("v1/user/**").hasRole("USER")
                     .anyRequest().authenticated()
             }
             .sessionManagement { sess: SessionManagementConfigurer<HttpSecurity?> ->
