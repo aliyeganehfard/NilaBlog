@@ -46,7 +46,8 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
             }
             val authHeader = request.getHeader("Authorization")
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                throw BlogException(ErrorCode.MISSING_REQUEST_AUTHORIZATION)
+                filterChain.doFilter(request, response)
+                return
             }
             val token = authHeader.substring("Bearer ".length)
             val decodedJWT: DecodedJWT = jwtVerificationService.getDecodedJWT(token)

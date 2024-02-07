@@ -14,4 +14,7 @@ class CommentAddReq : Serializable {
     @Valid
     @NotNull(message = "please provide post id")
     lateinit var post: BaseIdDto
+
+    @NotEmpty(message = "please enter user id")
+    lateinit var userId: String
 }

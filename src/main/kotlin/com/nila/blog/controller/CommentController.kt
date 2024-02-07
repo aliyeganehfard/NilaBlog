@@ -23,17 +23,13 @@ class CommentController {
     @Autowired
     lateinit var commentService: ICommentService
 
-    @Autowired
-    lateinit var jwtService: JWTVerificationService
-
     val mapper = Mapper()
 
     @PostMapping("add")
-    fun addPost(@RequestBody @Valid req: CommentAddReq, @RequestHeader("Authorization") token: String)
+    fun addPost(@RequestBody @Valid req: CommentAddReq)
             : ResponseEntity<GeneralResponse<Any>> {
-        val userId = jwtService.getUuid(token)
         val comment = mapper.toModel(req, Comment::class.java)
-        commentService.add(userId, comment)
+        commentService.add(req.userId, comment)
         val res = GeneralResponse.successfulResponse<Any>()
         return ResponseEntity(res, HttpStatus.OK)
     }
