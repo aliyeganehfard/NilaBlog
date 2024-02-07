@@ -3,8 +3,6 @@ package com.nila.blog.service.imgl
 import com.nila.blog.common.aop.ErrorCode
 import com.nila.blog.common.aop.exeptions.BlogException
 import com.nila.blog.common.config.JWTVerificationService
-import com.nila.blog.common.dto.comment.req.CommentAddReq
-import com.nila.blog.common.dto.post.req.PostAddReq
 import com.nila.blog.common.dto.post.req.PostEditReq
 import com.nila.blog.database.model.BlogPost
 import com.nila.blog.database.repository.BlogPostRepository
@@ -44,6 +42,8 @@ class BlogPostService : IBlogPostService {
         val post = findById(req.id!!)
         post.title = req.title
         post.content = req.content
+        post.category = req.category
+        post.keywords = req.keywords
         postRepository.save(post)
         log.info("update post with postId {}", post.id)
     }

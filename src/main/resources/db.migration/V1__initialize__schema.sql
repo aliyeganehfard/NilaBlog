@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS blog_post (
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL,
+    keywords VARCHAR(255) NOT NULL,
+    category VARCHAR(255) NOT NULL,
     user_id UUID NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id)
 );

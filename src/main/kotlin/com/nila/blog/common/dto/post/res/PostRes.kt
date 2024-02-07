@@ -1,6 +1,7 @@
 package com.nila.blog.common.dto.post.res
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.nila.blog.database.model.enums.PostCategory
 import java.io.Serializable
 import java.util.*
 
@@ -10,6 +11,8 @@ class PostRes : Serializable {
     var id: Long? = null
     var title: String? = null
     var content: String? = null
+    var category: PostCategory? = null
+    var keywords: List<String>? = null
     var createdAt: Date? = null
 
 }
