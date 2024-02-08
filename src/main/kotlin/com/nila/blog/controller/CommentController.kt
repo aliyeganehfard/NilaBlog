@@ -1,6 +1,5 @@
 package com.nila.blog.controller
 
-import com.nila.blog.common.config.JWTVerificationService
 import com.nila.blog.common.dto.GeneralResponse
 import com.nila.blog.common.dto.comment.req.CommentAddReq
 import com.nila.blog.common.dto.comment.req.CommentEditReq
@@ -12,7 +11,6 @@ import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
