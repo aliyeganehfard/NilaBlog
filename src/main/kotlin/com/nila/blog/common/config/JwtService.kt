@@ -55,7 +55,6 @@ class JwtService {
         val accessToken = generateAccessToken(payload, userDetails)
         jwt.accessToken = accessToken
         jwt.tokenType = TOKEN_TYPE
-        log.info("generating token for user {} ", userDetails.username)
         return jwt
     }
 

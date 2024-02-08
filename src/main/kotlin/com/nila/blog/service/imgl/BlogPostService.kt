@@ -84,6 +84,9 @@ class BlogPostService : IBlogPostService {
     }
 
     fun accessLevelCheck(postId: Long, token: String): Boolean {
+        if (!postRepository.existsById(postId)) {
+            return true;
+        }
         val userId = jwtService.getUuid(token)
         return postRepository.isUserValidToAccess(postId, UUID.fromString(userId))
     }

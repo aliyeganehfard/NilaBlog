@@ -14,6 +14,8 @@ import java.util.*
 @Repository
 interface BlogPostRepository : JpaRepository<BlogPost, Long> {
 
+    override fun existsById(postId: Long):Boolean
+
     @Query(
         """
         SELECT p FROM BlogPost p

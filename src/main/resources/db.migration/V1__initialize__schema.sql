@@ -17,9 +17,9 @@ CREATE TABLE IF NOT EXISTS blog_post (
     FOREIGN KEY (author_id) REFERENCES users (id)
 );
 
-CREATE TABLE IF NOT EXISTS "comment" (
+CREATE TABLE IF NOT EXISTS comments (
     id serial PRIMARY KEY,
-    "text" VARCHAR(255) NOT NULL,
+    texts VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NOT NULL,
     user_id UUID NOT NULL,
     post_id BIGINT NOT NULL,

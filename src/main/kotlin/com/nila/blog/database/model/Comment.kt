@@ -5,7 +5,7 @@ import org.hibernate.Hibernate
 import java.util.*
 
 @Entity
-@Table(name = "comment")
+@Table(name = "comments")
 data class Comment(
 
     @Id
@@ -13,7 +13,7 @@ data class Comment(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 
-    @Column(name = "text", nullable = false)
+    @Column(name = "texts", nullable = false)
     var text: String = "",
 
     @Column(name = "created_at", nullable = false)
