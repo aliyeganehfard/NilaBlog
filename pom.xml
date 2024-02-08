@@ -12,7 +12,7 @@
 
     <groupId>com.nila.blog</groupId>
     <artifactId>NilaBlog</artifactId>
-    <version>1.6.0</version>
+    <version>1.7.0</version>
     <name>blog-service</name>
     <packaging>war</packaging>
 
@@ -84,6 +84,13 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
+        </dependency>
+
+        <!-- h2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <!-- Model Mapper -->

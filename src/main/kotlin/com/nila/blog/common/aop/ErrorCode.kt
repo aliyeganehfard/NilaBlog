@@ -18,7 +18,6 @@ enum class ErrorCode(var code: Int?, var message: String?, var httpStatus: HttpS
     AUTH_INCORRECT_PASSWORD(1053,"password is incorrect",HttpStatus.BAD_REQUEST),
 
     POST_NOT_FOUND(1065, "post not found", HttpStatus.BAD_REQUEST),
-    INVALID_POST_CATEGORY(1066, "entered post category is invalid", HttpStatus.BAD_REQUEST),
 
     COMMENT_NOT_FOUND(1080, "comment not found", HttpStatus.BAD_REQUEST),
 
