@@ -4,9 +4,11 @@ import com.nila.blog.common.config.JWTVerificationService
 import com.nila.blog.common.dto.GeneralResponse
 import com.nila.blog.common.dto.post.req.PostAddReq
 import com.nila.blog.common.dto.post.req.PostEditReq
+import com.nila.blog.common.dto.post.req.PostFindAllReq
 import com.nila.blog.common.dto.post.res.PostRes
 import com.nila.blog.common.utils.Mapper
 import com.nila.blog.database.model.BlogPost
+import com.nila.blog.database.model.enums.PostCategory
 import com.nila.blog.service.IBlogPostService
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Max
@@ -83,6 +85,14 @@ class BlogPostController {
         val post = postService.findById(postId)
         val postDto = mapper.toDto(post, PostRes::class.java)
         val res = GeneralResponse.successfulResponse(postDto)
+        return ResponseEntity(res, HttpStatus.OK)
+    }
+
+    @GetMapping("find/all")
+    fun findAllPosts(@RequestBody @Valid req: PostFindAllReq): ResponseEntity<GeneralResponse<List<PostRes>>> {
+        val posts = postService.findAllPost(req)
+        val postsDto = mapper.toModelList(posts, PostRes::class.java)
+        val res = GeneralResponse.successfulResponse(postsDto)
         return ResponseEntity(res, HttpStatus.OK)
     }
 }

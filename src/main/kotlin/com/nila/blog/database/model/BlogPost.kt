@@ -32,9 +32,9 @@ data class BlogPost(
     @Column(name = "keywords", nullable = false)
     var keywords: List<String> = mutableListOf(),
 
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "author_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
-    var user: User? = null,
+    var author: User? = null,
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     var comments: List<Comment> = mutableListOf(),

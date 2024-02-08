@@ -1,11 +1,10 @@
 package com.nila.blog.common.dto.post.res
 
-import com.fasterxml.jackson.annotation.JsonInclude
 import com.nila.blog.database.model.enums.PostCategory
 import java.io.Serializable
 import java.util.*
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 class PostRes : Serializable {
 
     var id: Long? = null
@@ -14,5 +13,5 @@ class PostRes : Serializable {
     var category: PostCategory? = null
     var keywords: List<String>? = null
     var createdAt: Date? = null
-
+    var author: UserIdRes? = null
 }

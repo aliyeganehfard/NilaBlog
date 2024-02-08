@@ -4,6 +4,7 @@ import com.nila.blog.common.aop.ErrorCode
 import com.nila.blog.common.aop.exeptions.BlogException
 import com.nila.blog.common.config.JWTVerificationService
 import com.nila.blog.common.dto.post.req.PostEditReq
+import com.nila.blog.common.dto.post.req.PostFindAllReq
 import com.nila.blog.database.model.BlogPost
 import com.nila.blog.database.repository.BlogPostRepository
 import com.nila.blog.service.IBlogPostService
@@ -14,6 +15,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
+
 
 @Service
 class BlogPostService : IBlogPostService {
@@ -32,7 +34,7 @@ class BlogPostService : IBlogPostService {
     @Transactional
     override fun add(userId: String, post: BlogPost) {
         val user = userService.findById(UUID.fromString(userId))
-        post.user = user
+        post.author = user
         postRepository.save(post)
         log.info("add post for user {} with post id {}", user.username, post.id)
     }
@@ -65,6 +67,20 @@ class BlogPostService : IBlogPostService {
                 log.warn(ErrorCode.POST_NOT_FOUND.message)
                 BlogException(ErrorCode.POST_NOT_FOUND)
             }
+    }
+
+    override fun findAllPost(req: PostFindAllReq): List<BlogPost> {
+        val startDate: Date = req.fromDate?.let { Date(it) } ?: Date(951900023099)
+        val finishDate: Date = req.toDate?.let { Date(it) } ?: Date()
+        val authorId: UUID? = req.authorId?.let { UUID.fromString(it) }
+        return postRepository.findAllPosts(
+            startDate,
+            finishDate,
+            authorId,
+            req.category,
+            req.keywords,
+            PageRequest.of(req.page!!, req.size!!)
+        ).orElse(mutableListOf())
     }
 
     fun accessLevelCheck(postId: Long, token: String): Boolean {

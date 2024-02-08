@@ -29,7 +29,7 @@ data class User(
     @Column(name = "profile_pictures")
     var profilePictures: ByteArray? = null,
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     var posts: List<BlogPost> = mutableListOf(),
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)

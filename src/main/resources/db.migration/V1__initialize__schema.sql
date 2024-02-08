@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS blog_post (
     created_at TIMESTAMP NOT NULL,
     keywords VARCHAR(255) NOT NULL,
     category VARCHAR(255) NOT NULL,
-    user_id UUID NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    author_id UUID NOT NULL,
+    FOREIGN KEY (author_id) REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS "comment" (
