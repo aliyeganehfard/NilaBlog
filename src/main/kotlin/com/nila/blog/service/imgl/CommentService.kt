@@ -10,6 +10,8 @@ import com.nila.blog.service.ICommentService
 import com.nila.blog.service.IUserService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -41,6 +43,7 @@ class CommentService : ICommentService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = ["comment"], key = "#req.id")
     override fun edit(req: CommentEditReq) {
         val comment = findById(req.id!!)
         comment.text = req.text
@@ -49,14 +52,16 @@ class CommentService : ICommentService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = ["comment"], key = "#commentId")
     override fun delete(commentId: Long) {
         val comment = findById(commentId)
         commentRepository.delete(comment)
         log.info("comment with id {} deleted", comment.id)
     }
 
-    override fun findById(postId: Long): Comment {
-        return commentRepository.findById(postId)
+    @Cacheable(cacheNames = ["comment"], key = "#commentId")
+    override fun findById(commentId: Long): Comment {
+        return commentRepository.findById(commentId)
             .orElseThrow {
                 log.warn(ErrorCode.COMMENT_NOT_FOUND.message)
                 BlogException(ErrorCode.COMMENT_NOT_FOUND)

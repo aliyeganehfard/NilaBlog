@@ -9,6 +9,8 @@ import com.nila.blog.database.repository.UserRepository
 import com.nila.blog.service.IUserService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
@@ -37,6 +39,7 @@ class UserService : IUserService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = ["user"], key = "#userId")
     override fun editProfile(userId: String, req: UserEditProfileReq) {
         val id = UUID.fromString(userId)
 
@@ -57,6 +60,7 @@ class UserService : IUserService {
         return userRepository.existsByUsernameOrEmail(username, email)
     }
 
+    @Cacheable(cacheNames = ["user"], key = "#username")
     override fun findByUsername(username: String): User {
         return userRepository.findByUsername(username)
             .orElseThrow {
@@ -65,6 +69,7 @@ class UserService : IUserService {
             }
     }
 
+    @Cacheable(cacheNames = ["user"], key = "#userId")
     override fun findById(userId: UUID): User {
         return userRepository.findById(userId)
             .orElseThrow {

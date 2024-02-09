@@ -11,5 +11,5 @@ interface ICommentService {
 
     fun delete(commentId: Long)
 
-    fun findById(postId: Long): Comment
+    fun findById(commentId: Long): Comment
 }

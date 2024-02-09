@@ -11,6 +11,8 @@ import com.nila.blog.service.IBlogPostService
 import com.nila.blog.service.IUserService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -40,6 +42,7 @@ class BlogPostService : IBlogPostService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = ["post"], key = "#req.id")
     override fun edit(req: PostEditReq) {
         val post = findById(req.id!!)
         post.title = req.title
@@ -51,16 +54,19 @@ class BlogPostService : IBlogPostService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = ["post"], key = "#postId")
     override fun delete(postId: Long) {
         val post = findById(postId)
         postRepository.delete(post)
         log.info("post with id {} deleted", postId)
     }
 
+    @Cacheable(cacheNames = ["post"], key = "'user:' + #userId + ':page:' + #page")
     override fun findUserPosts(userId: String, page: Int, size: Int): List<BlogPost> {
         return postRepository.findUserPosts(UUID.fromString(userId), PageRequest.of(page, size))
     }
 
+    @Cacheable(cacheNames = ["post"], key = "#postId")
     override fun findById(postId: Long): BlogPost {
         return postRepository.findById(postId)
             .orElseThrow {
