@@ -61,7 +61,6 @@ class BlogPostService : IBlogPostService {
         log.info("post with id {} deleted", postId)
     }
 
-    @Cacheable(cacheNames = ["post"], key = "'user:' + #userId + ':page:' + #page")
     override fun findUserPosts(userId: String, page: Int, size: Int): List<BlogPost> {
         return postRepository.findUserPosts(UUID.fromString(userId), PageRequest.of(page, size))
     }

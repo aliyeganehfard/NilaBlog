@@ -19,9 +19,6 @@ import java.util.*
 @Service
 class JWTVerificationService {
 
-    @Autowired
-    lateinit var resourceLoader: ResourceLoader
-
     private final var publicKey: RSAPublicKey? = null
 
     private val log = LoggerFactory.getLogger(JWTVerificationService::class.java)
@@ -41,6 +38,9 @@ class JWTVerificationService {
         return publicKey
     }
 
+    /**
+        verify access token
+     */
     fun getDecodedJWT(token: String?): DecodedJWT {
         var token = token
         if (token!!.startsWith("Bearer")) {
@@ -60,25 +60,13 @@ class JWTVerificationService {
         }
     }
 
+    /**
+        get userId From token
+     */
     fun getUuid(token: String): String {
         val decodedJWT = getDecodedJWT(token)
         return decodedJWT.getClaim(UUID)
             .asList(String::class.java)[0]
-    }
-
-    fun getClaims(token: String): Map<String, Claim> {
-        val decodedJWT = getDecodedJWT(token)
-        return decodedJWT.claims
-    }
-
-    fun isJWTExpired(token: String): Boolean {
-        return try {
-            val decodedJWT = getDecodedJWT(token)
-            val expiresAt = decodedJWT.expiresAt
-            expiresAt.before(Date())
-        } catch (e: Exception) {
-            true
-        }
     }
 
     private val verificationAlgorithm: Algorithm

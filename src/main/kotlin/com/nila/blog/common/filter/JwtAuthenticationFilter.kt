@@ -33,6 +33,12 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
     @Autowired
     lateinit var userSecurityService: UserSecurityService
 
+
+    /**
+        validates the Authorization header pre request
+        and extracts user information from a JWT token,
+        sets user authentication details
+     */
     @Throws(ServletException::class, IOException::class)
     override fun doFilterInternal(
         request: HttpServletRequest,

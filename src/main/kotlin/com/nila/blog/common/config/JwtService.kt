@@ -50,16 +50,15 @@ class JwtService {
         }
     }
 
+    /**
+        generate access token
+     */
     fun getToken(payload: Map<String, List<String?>>, userDetails: UserDetails): AuthenticationResponse {
         val jwt = AuthenticationResponse()
         val accessToken = generateAccessToken(payload, userDetails)
         jwt.accessToken = accessToken
         jwt.tokenType = TOKEN_TYPE
         return jwt
-    }
-
-    fun getDecodedJWT(token: String?): DecodedJWT {
-        return jwtVerificationService.getDecodedJWT(token)
     }
 
     private fun generateAccessToken(payload: Map<String, List<String?>>, userDetails: UserDetails): String {

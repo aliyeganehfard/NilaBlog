@@ -1,16 +1,16 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/blog_service
-    username: postgres
-    password: ali.1381
+    url: jdbc:postgresql://db:5432/nila_soft_blog
+    username: nila
+    password: nilasoft
     driverClassName: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
   flyway:
     locations: classpath:db.migration
-    enabled: false
+    enabled: true
   main:
     allow-bean-definition-overriding: true
   cache:
@@ -24,8 +24,5 @@ spring:
       cache-null-values: true
   data:
     redis:
-      host: localhost
+      host: redis
       port: 6379
-      jedis:
-        pool:
-          enabled: false
